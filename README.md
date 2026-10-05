@@ -25,29 +25,32 @@ It wrote the code, ran away, and now the game is unplayable.
 
 ## 📝 Document Your Experience
 
-- [ ] Describe the game's purpose.
-- [ ] Detail which bugs you found.
-- [ ] Explain what fixes you applied.
+- The game is a Streamlit number-guessing game. The player selects a difficulty, guesses the secret number, and receives higher/lower feedback while earning or losing points.
+- I found that the hint text pointed in the wrong direction and that alternating between numeric and string secret values could cause incorrect comparisons. I also found that the displayed guess range did not follow the selected difficulty, the attempt count starts one too high, and New Game does not reset a finished status.
+- I moved the range selection, input parsing, guess comparison, hint text, and score calculation into `logic_utils.py`. I corrected the hint direction, kept guess comparisons numeric, and made the displayed and newly generated ranges follow the selected difficulty. The attempt-count and finished-status reset issues remain unfixed.
 
-## 📸 Demo Walkthrough
+## Demo Walkthrough
 
-Describe your fixed game in numbered steps so a reader can follow along without watching a video:
+The following is a sample walkthrough derived from the game logic, not a browser-recorded play-through. Assume Normal difficulty and a secret number of 60.
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. The player starts a Normal game and enters `40`.
+2. The game returns `Too Low` and displays `Go HIGHER!`; the score changes from 0 to -5.
+3. The player enters `70`; the game returns `Too High` and displays `Go LOWER!`; the score changes to -10.
+4. The player enters `60`; the game returns `Win`, displays `Correct!`, and ends the round.
+5. With the current scoring formula and attempt counter, the final score for this sequence is 40.
 
-**Screenshot** *(optional)*: <!-- Insert a screenshot of your fixed, winning game here -->
+The attempt counter currently starts at 1, so its displayed attempts-left value is off by one. Starting a new game after a win or loss also does not reset the game status yet.
 
 ## 🧪 Test Results
 
 ```
-# Paste your pytest output here, e.g.:
-# pytest tests/
-# ========================= X passed in 0.XXs =========================
+$ PYTHONPATH=. ./.venv/bin/pytest
+tests/test_game_logic.py .....                                           [100%]
+
+============================== 5 passed in 0.01s ==============================
 ```
+
+These tests cover winning, too-high and too-low outcomes, and the corresponding high/low hint directions. Advanced edge-case testing was not completed.
 
 ## 🚀 Stretch Features
 
