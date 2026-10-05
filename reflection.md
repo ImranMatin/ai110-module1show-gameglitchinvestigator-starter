@@ -8,22 +8,10 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 - List at least two concrete bugs you noticed at the start  
   (for example: "the hints were backwards").
 
-The game was working fine but the problem was it
-**Bug Reproduction Log**
-
-Document at least 3 bugs you found. Add rows as needed.
-
-| Input | Expected Behavior | Actual Behavior | Console Output / Error |
-| ----- | ----------------- | --------------- | ---------------------- |
-|       |                   |                 |                        |
-|       |                   |                 |                        |
-|       |                   |                 |                        |
-
----
-
-Installing requirements initially failed because the disk was full, so I used the workspace virtual environment instead. The Streamlit server later returned HTTP 200 at `http://localhost:8501`, but I did not complete a browser play-through. The cases below are based on the code paths and test results; visible gameplay still needs manual confirmation.
+I could not complete a first browser play-through because installing the requirements initially failed when the disk was full. Later, the Streamlit server returned HTTP 200 from the workspace virtual environment, but I still did not finish an interactive game. Code review showed that the high/low hint text was backwards and that some guesses compared a string secret with a number, which could produce the wrong result. I also found an off-by-one attempt count and that starting a new game did not reset the finished-game status; the log below records these code-path findings, not manually confirmed gameplay.
 
 **Bug Reproduction Logs**
+The following cases were identified from the code; I did not verify them by playing through the browser.
 | Input Used / Trigger | Expected Behavior | Actual Behavior | Console Error / Output | Suspected Code Location |
 |----------------------|-------------------|-----------------|------------------------|-------------------------|
 | On a valid guess greater than the secret shown in Developer Debug Info | The game reports "Too High" and advises the player to go lower | `check_guess` returns "Too High" but displays "Go HIGHER!", sending the player in the wrong direction | none; the app displays a misleading hint | `app.py`, `check_guess` |
@@ -35,7 +23,7 @@ Installing requirements initially failed because the disk was full, so I used th
 
 ## 2. How did you use AI as a teammate?
 
-I used Claude and GitHub Copilot while investigating the game logic and writing tests. Copilot suggested moving the comparison and hint behavior into testable helpers in `logic_utils.py`; this fit the existing module and separated game rules from Streamlit rendering. The existing test already checked that `60` against `50` returns `"Too High"`, so I changed the regression approach to test the actual UI hint text as well; I added coverage for both directions because both messages had been reversed. The five passing pytest tests verify the outcomes and the displayed guidance, although they do not replace a manual browser play-through.
+I used Claude and GitHub Copilot while investigating the game logic and writing tests. Copilot's suggestion to move the comparison into `logic_utils.py` was correct because it keeps the game rule separate from Streamlit UI code; the existing tests could then call it directly, and all three starter tests passed. Copilot also suggested a focused regression test for the misleading hint, and I broadened that suggestion to cover both high and low guesses because both directions were reversed. I added `get_hint_message` so the tests could check the actual player-facing text, and all five tests passed. I reviewed the changes in both files and kept the helper small rather than adding UI-level test machinery.
 
 ## 3. Debugging and testing your fixes
 
@@ -48,13 +36,10 @@ I used Claude and GitHub Copilot while investigating the game logic and writing 
 
 ## 4. What did you learn about Streamlit and state?
 
-- How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
+Streamlit reruns a Python script from the top when a user interacts with a widget, so ordinary variables are recalculated each time. Values stored in `st.session_state` persist between those reruns for the current user's session, which is why the game's secret and progress belong there. Every action that starts or resets a game must update all related state, including the status, or an old value can affect the next run.
 
 ---
 
 ## 5. Looking ahead: your developer habits
 
-- What is one habit or strategy from this project that you want to reuse in future labs or projects?
-  - This could be a testing habit, a prompting strategy, or a way you used Git.
-- What is one thing you would do differently next time you work with AI on a coding task?
-- In one or two sentences, describe how this project changed the way you think about AI generated code.
+I want to reuse the habit of checking existing tests first, writing a small regression test for the user-visible bug, and rerunning the suite after each focused change. Next time, I would inspect the full app in a browser earlier and give the AI one bug at a time with the relevant files attached. This project reminded me that AI-generated code can be useful, but its assumptions still need to be checked against the actual code, tests, and behavior.
