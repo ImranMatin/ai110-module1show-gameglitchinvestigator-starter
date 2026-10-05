@@ -28,6 +28,7 @@ It wrote the code, ran away, and now the game is unplayable.
 - The game is a Streamlit number-guessing game. The player selects a difficulty, guesses the secret number, and receives higher/lower feedback while earning or losing points.
 - I found that the hint text pointed in the wrong direction and that alternating between numeric and string secret values could cause incorrect comparisons. I also found that the displayed guess range did not follow the selected difficulty, the attempt count starts one too high, and New Game does not reset a finished status.
 - I moved the range selection, input parsing, guess comparison, hint text, and score calculation into `logic_utils.py`. I corrected the hint direction, kept guess comparisons numeric, and made the displayed and newly generated ranges follow the selected difficulty. The attempt-count and finished-status reset issues remain unfixed.
+- The sidebar now includes a Guess History table showing each valid guess, its outcome, and its absolute distance from the secret. The history is kept in Streamlit session state for the current session; the feature is implemented in `app.py` using the `guess_history` state list.
 
 ## Demo Walkthrough
 

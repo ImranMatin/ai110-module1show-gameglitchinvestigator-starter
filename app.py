@@ -1,4 +1,6 @@
 import random
+from typing import cast
+
 import streamlit as st
 from logic_utils import (
     check_guess,
@@ -48,6 +50,20 @@ if "status" not in st.session_state:
 if "history" not in st.session_state:
     st.session_state.history = []
 
+if "guess_history" not in st.session_state:
+    st.session_state["guess_history"] = []
+
+guess_history = cast(
+    list[dict[str, int | str]], st.session_state["guess_history"]
+)
+
+def render_guess_history():
+    st.sidebar.subheader("Guess History")
+    if guess_history:
+        st.sidebar.table(guess_history)
+    else:
+        st.sidebar.caption("Your guesses will appear here.")
+
 st.subheader("Make a guess")
 
 st.info(
@@ -82,6 +98,7 @@ if new_game:
     st.rerun()
 
 if st.session_state.status != "playing":
+    render_guess_history()
     if st.session_state.status == "won":
         st.success("You already won. Start a new game to play again.")
     else:
@@ -102,6 +119,13 @@ if submit:
 
         outcome = check_guess(guess_int, st.session_state.secret)
         message = get_hint_message(outcome)
+        guess_history.append(
+            {
+                "Guess": guess_int,
+                "Outcome": outcome,
+                "Distance": abs(guess_int - st.session_state.secret),
+            }
+        )
 
         if show_hint:
             st.warning(message)
@@ -127,6 +151,8 @@ if submit:
                     f"The secret was {st.session_state.secret}. "
                     f"Score: {st.session_state.score}"
                 )
+
+render_guess_history()
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")

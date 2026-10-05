@@ -10,15 +10,15 @@
 
 **What task did you give the agent?**
 
-<!-- Describe the goal you asked the agent to accomplish -->
+Add a useful Guess History feature to the Streamlit guessing game. Show each valid guess, its Too High/Too Low/Win result, and how far it was from the secret in the sidebar; keep the history for the current Streamlit session.
 
 **What did the agent do?**
 
-<!-- List the steps the agent took (files edited, commands run, etc.) -->
+Modified `app.py` to initialize a separate `guess_history` session-state list, append structured records for valid guesses, and display a sidebar table with Guess, Outcome, and Distance columns. Modified `README.md` to describe the new feature. The existing debug `history` remains unchanged, so invalid entries can still be inspected separately. The full pytest suite passed with 10 tests. In the running app, I submitted `50` when the displayed secret was `62`; the app showed `Go HIGHER!` and the sidebar recorded `50 | Too Low | 12`.
 
 **What did you have to verify or fix manually?**
 
-<!-- Describe anything the agent got wrong or that required human review -->
+I checked that the distance is the absolute difference between the integer guess and secret, and that the table renders after a submitted guess so it includes the newest entry without clearing the feedback. I kept the feature session-only rather than adding file persistence, and kept invalid text out of the guess table because it has no numeric distance. The browser check confirmed the displayed outcome and distance matched the secret and guess.
 
 ---
 
