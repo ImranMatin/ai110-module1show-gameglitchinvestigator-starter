@@ -19,7 +19,7 @@ def parse_guess(raw: str | None) -> tuple[bool, int | None, str | None]:
         return False, None, "Enter a guess."
 
     try:
-        value = int(float(raw)) if "." in raw else int(raw)
+        value = int(raw)
     except (ValueError, TypeError, OverflowError):
         return False, None, "That is not a number."
 

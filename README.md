@@ -3,7 +3,7 @@
 ## 🚨 The Situation
 
 You asked an AI to build a simple "Number Guessing Game" using Streamlit.
-It wrote the code, ran away, and now the game is unplayable. 
+It wrote the code, ran away, and now the game is unplayable.
 
 - You can't win.
 - The hints lie to you.
@@ -17,7 +17,7 @@ It wrote the code, ran away, and now the game is unplayable.
 ## 🕵️‍♂️ Your Mission
 
 1. **Play the game.** Open the "Developer Debug Info" tab in the app to see the secret number. Try to win.
-2. **Find the State Bug.** Why does the secret number change every time you click "Submit"? Ask ChatGPT: *"How do I keep a variable from resetting in Streamlit when I click a button?"*
+2. **Find the State Bug.** Why does the secret number change every time you click "Submit"? Ask ChatGPT: _"How do I keep a variable from resetting in Streamlit when I click a button?"_
 3. **Fix the Logic.** The hints ("Higher/Lower") are wrong. Fix them.
 4. **Refactor & Test.** - Move the logic into `logic_utils.py`.
    - Run `pytest` in your terminal.
@@ -45,12 +45,12 @@ The attempt counter currently starts at 1, so its displayed attempts-left value 
 
 ```
 $ PYTHONPATH=. ./.venv/bin/pytest
-tests/test_game_logic.py .....                                           [100%]
+tests/test_game_logic.py ..........                                      [100%]
 
-============================== 5 passed in 0.01s ==============================
+============================== 10 passed in 0.01s ==============================
 ```
 
-These tests cover winning, too-high and too-low outcomes, and the corresponding high/low hint directions. Advanced edge-case testing was not completed.
+These tests cover winning, too-high and too-low outcomes, high/low hint directions, empty and non-numeric input, decimal rejection, negative guesses, and an extremely large integer. Advanced edge-case testing is complete.
 
 ## 🚀 Stretch Features
 
